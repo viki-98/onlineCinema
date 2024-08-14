@@ -1,0 +1,12 @@
+@import 'bootstrap/scss/bootstrap';
+
+$dark-body: #000;
+$light-body: #fff;
+
+body {
+  background-color: $light-body;
+}
+
+body.dark {
+  background-color: $dark-body;
+}
