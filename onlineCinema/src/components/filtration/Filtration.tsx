@@ -1,4 +1,4 @@
-import React from "react"
+// import React from "react"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import Navbar from "react-bootstrap/Navbar"
@@ -7,8 +7,14 @@ import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+import { useAppSelector } from "../../hooks/hooks.ts"
 
 const Filtration = () => {
+
+    const result = useAppSelector((state) => state.filtration)
+    console.log(result)
+    console.log(result.cinemaGenres)
+
     return (
         <Navbar variant="light" bg="light" expand="lg">
             <Container fluid>
@@ -49,7 +55,7 @@ const Filtration = () => {
 
                     </Nav>
 
-                    <Form inline>
+                    <Form inline="true">
                         <Row>
                             <Col xs="auto">
                                 <Form.Control
