@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import filtrationReducer from "./slices/filtrationSlice.ts"
+import popularMovieReducer from "./slices/popularMovieSlice.ts"
 
 export const store = configureStore({
     reducer: {
-        filtration: filtrationReducer
+        filtration: filtrationReducer.reducer,
+        popularMovies: popularMovieReducer.reducer
     }
 })
 

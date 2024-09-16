@@ -8,12 +8,25 @@ import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import { useAppSelector } from "../../hooks/hooks.ts"
+import { fetchFilmsGenres } from "../../services/filtrationService.ts"
+import "./Filtration.scss"
 
 const Filtration = () => {
-
     const result = useAppSelector((state) => state.filtration)
-    console.log(result)
-    console.log(result.cinemaGenres)
+    console.log(result.seriesGenres)
+
+    // Функция для разбиения элементов на столбцы
+    const splitIntoColumns = (items, columns) => {
+        const itemsPerColumn = Math.ceil(items.length / columns)
+        return Array.from({ length: columns }, (_, index) =>
+            items.slice(index * itemsPerColumn, (index + 1) * itemsPerColumn)
+        )
+    }
+
+    // Разделение на 2 колонки
+    const cinemaGenresColumns = splitIntoColumns(result.cinemaGenres, 4)
+    const cinemaSeriesColumns = splitIntoColumns(result.seriesGenres, 4)
+
 
     return (
         <Navbar variant="light" bg="light" expand="lg">
@@ -26,15 +39,17 @@ const Filtration = () => {
                             title="Films"
                             menuVariant="light"
                         >
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
-                                Another action
-                            </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">
-                                Separated link
-                            </NavDropdown.Item>
+                            <div className="dropdown-menu-columns">
+                                {cinemaGenresColumns.map((column, columnIndex) => (
+                                    <div className="dropdown-column" key={columnIndex}>
+                                        {column.map((element) => (
+                                            <NavDropdown.Item key={element.id}>
+                                                {element.name}
+                                            </NavDropdown.Item>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
                         </NavDropdown>
 
                         <NavDropdown
@@ -42,17 +57,19 @@ const Filtration = () => {
                             title="Series"
                             menuVariant="light"
                         >
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
-                                Another action
-                            </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">
-                                Separated link
-                            </NavDropdown.Item>
-                        </NavDropdown>
+                            <div className="dropdown-menu-columns">
+                                {cinemaSeriesColumns.map((column, columnIndex) => (
+                                    <div className="dropdown-column" key={columnIndex}>
+                                        {column.map((element) => (
+                                            <NavDropdown.Item key={element.id}>
+                                                {element.name}
+                                            </NavDropdown.Item>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
 
+                        </NavDropdown>
                     </Nav>
 
                     <Form inline="true">
@@ -61,7 +78,7 @@ const Filtration = () => {
                                 <Form.Control
                                     type="text"
                                     placeholder="Search"
-                                    className=" mr-sm-2"
+                                    className="mr-sm-2"
                                 />
                             </Col>
                             <Col xs="auto">
@@ -69,8 +86,6 @@ const Filtration = () => {
                             </Col>
                         </Row>
                     </Form>
-
-
                 </Navbar.Collapse>
             </Container>
         </Navbar>
