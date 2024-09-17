@@ -4,10 +4,15 @@ import { fetchFilmsGenres, fetchSeriesGenres } from "../../services/filtrationSe
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks.ts"
 import { useEffect } from "react"
 import { fetchPopularMovies } from "../../services/popularMoviesService.ts"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/Container"
+import MovieCard from "../../components/Card/MovieCard.tsx"
 
 const HomePage = () => {
     const dispatch = useAppDispatch()
     const { popularMovies } = useAppSelector((state) => state.popularMovies)
+    const { cinemaGenres } = useAppSelector((state) => state.filtration)
 
     useEffect(() => {
         dispatch(fetchFilmsGenres())
@@ -15,22 +20,24 @@ const HomePage = () => {
         dispatch(fetchPopularMovies())
     }, [])
 
-    const clickHandler = () => {
-    }
+
     return (
         <>
             <Header />
             <Filtration />
-            <div>
-                {popularMovies.map((element) => {
-                    return (
-                        <div>
-                            <img src={`https://image.tmdb.org/t/p/w300${element.poster_path}`} />
-                            <p>{element.title}</p>
-                        </div>
-                    )
-                })}
-            </div>
+            <Container>
+                <Row xs={1} md={4} className="g-4">
+                    {popularMovies.map((element) => {
+                        return (
+                            <Col key={element.id}>
+                                <MovieCard movies={element} genres={cinemaGenres} />
+
+                            </Col>
+                        )
+                    })}
+                </Row>
+            </Container>
+
 
         </>
     )
