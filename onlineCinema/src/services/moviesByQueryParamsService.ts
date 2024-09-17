@@ -1,17 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
+import { IMoviesByQueryParamsResponse } from "../types/types.ts"
 import axios from "axios"
-import { IPopularMoviesResponse } from "../types/types.ts"
 
-export const fetchPopularMovies = createAsyncThunk<
-    IPopularMoviesResponse,
-    void,
+interface IParams {
+    page: number
+    with_genres: string
+    sort_by: string
+}
+
+export const fetchMoviesByQueryParams = createAsyncThunk<
+    IMoviesByQueryParamsResponse,
+    IParams,
     { rejectValue: string }
->("popularMovies/fetchPopularMovies", async (_, { rejectWithValue }) => {
+>("moviesByQueryParams/fetchMoviesByQueryParams", async (params, { rejectWithValue }) => {
     try {
         const options = {
             method: "GET",
-            url: "https://api.themoviedb.org/3/movie/popular",
-            params: { language: "en-US", page: "1" },
+            url: "https://api.themoviedb.org/3/discover/movie",
+            params: { language: "en-US", page: params.page, sort_by: params.sort_by, with_genres: params.with_genres },
             headers: {
                 accept: "application/json",
                 Authorization:

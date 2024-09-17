@@ -3,15 +3,15 @@ import {
     fetchFilmsGenres, fetchSeriesGenres,
     GenresResponse
 } from "../../services/filtrationService"
+import { IGenre } from "../../types/types.ts"
 
-interface IGenre {
-    id: number
-    name: string
-}
 
 interface IFiltrationState {
     cinemaGenres: IGenre[]
     seriesGenres: IGenre[]
+    selectedMovieGenre: IGenre | null
+    selectedSeriesGenre: IGenre | null
+    sortBy: string
     isLoading: boolean
     isError: string | null
 }
@@ -19,6 +19,9 @@ interface IFiltrationState {
 const initialState: IFiltrationState = {
     cinemaGenres: [],
     seriesGenres: [],
+    selectedMovieGenre: null,
+    selectedSeriesGenre: null,
+    sortBy: "popularity.desc",
     isLoading: false,
     isError: null
 }
@@ -26,7 +29,17 @@ const initialState: IFiltrationState = {
 const filtrationSlice = createSlice({
     name: "filtration",
     initialState,
-    reducers: {},
+    reducers: {
+        setSelectedMovieGenre: (state, action: PayloadAction<IGenre | null>) => {
+            state.selectedSeriesGenre = null
+            state.selectedMovieGenre = action.payload
+        },
+        setSelectedSeriesGenre: (state, action: PayloadAction<IGenre | null>) => {
+            state.selectedMovieGenre = null
+            state.selectedSeriesGenre = action.payload
+        }
+
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchFilmsGenres.pending, (state) => {
@@ -42,7 +55,8 @@ const filtrationSlice = createSlice({
             )
             .addCase(
                 fetchFilmsGenres.rejected,
-                (state, action: PayloadAction<string | null>) => {
+                (state, action) => {
+                    // Здесь action.payload может быть undefined, поэтому проверяем на наличие
                     state.isError = action.payload || "An error occurred"
                     state.isLoading = false
                 }
@@ -60,7 +74,7 @@ const filtrationSlice = createSlice({
             )
             .addCase(
                 fetchSeriesGenres.rejected,
-                (state, action: PayloadAction<string | null>) => {
+                (state, action) => {
                     state.isError = action.payload || "An error occurred"
                     state.isLoading = false
                 }
@@ -69,5 +83,5 @@ const filtrationSlice = createSlice({
     }
 })
 
-
+export const { setSelectedMovieGenre, setSelectedSeriesGenre } = filtrationSlice.actions
 export default filtrationSlice

@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
-import { RootState } from "../store"
+
+// import { RootState } from "../store"
 
 interface IGenre {
     id: number
@@ -14,7 +15,7 @@ export interface GenresResponse {
 export const fetchFilmsGenres = createAsyncThunk<
     GenresResponse,
     void,
-    { state: RootState }
+    { rejectValue: string }
 >("filtration/fetchFilmsGenres", async (_, { rejectWithValue }) => {
     try {
         const options = {
@@ -29,16 +30,22 @@ export const fetchFilmsGenres = createAsyncThunk<
         }
 
         const response = await axios.request<GenresResponse>(options)
+
+        if (response.status !== 200) {
+            throw new Error("Unexpected response status")
+        }
+
         return response.data
     } catch (error) {
-        return rejectWithValue(error.response?.data || error.message)
+        return rejectWithValue("An error occurred while fetching films")
     }
 })
+
 
 export const fetchSeriesGenres = createAsyncThunk<
     GenresResponse,
     void,
-    { state: RootState }
+    { rejectValue: string }
 >("filtration/fetchSeriesGenres", async (_, { rejectWithValue }) => {
     try {
         const options = {
@@ -53,8 +60,12 @@ export const fetchSeriesGenres = createAsyncThunk<
         }
 
         const response = await axios.request<GenresResponse>(options)
+
+        if (response.status !== 200) {
+            throw new Error("Unexpected response status")
+        }
         return response.data
     } catch (error) {
-        return rejectWithValue(error.response?.data || error.message)
+        return rejectWithValue("An error occurred while fetching series")
     }
 })

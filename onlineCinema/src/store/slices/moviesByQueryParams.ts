@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchPopularMovies } from "../../services/popularMoviesService.ts"
 import { IFilm } from "../../types/types.ts"
+import { fetchPopularMovies } from "../../services/popularMoviesService.ts"
 
-interface IPopularMovieState {
-    popularMovies: IFilm[]
+
+interface IMoviesByQueryParamsState {
+    moviesByQueryParams: IFilm[]
     page: number
     total_pages: number
     total_results: number
@@ -11,8 +12,8 @@ interface IPopularMovieState {
     isError: string | null
 }
 
-const initialState: IPopularMovieState = {
-    popularMovies: [],
+const initialState: IMoviesByQueryParamsState = {
+    moviesByQueryParams: [],
     page: 0,
     total_pages: 0,
     total_results: 0,
@@ -20,8 +21,8 @@ const initialState: IPopularMovieState = {
     isError: null
 }
 
-const popularMovieSlice = createSlice({
-    name: "popularMovies",
+const moviesByQueryParamsSlice = createSlice({
+    name: "moviesByQueryParams",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
@@ -33,7 +34,7 @@ const popularMovieSlice = createSlice({
             .addCase(
                 fetchPopularMovies.fulfilled,
                 (state, action) => {
-                    state.popularMovies = action.payload.results
+                    state.moviesByQueryParams = action.payload.results
                     state.page = action.payload.page
                     state.total_pages = action.payload.total_pages
                     state.total_results = action.payload.total_results
@@ -48,7 +49,8 @@ const popularMovieSlice = createSlice({
                 }
             )
     }
+
 })
 
 
-export default popularMovieSlice
+export default moviesByQueryParamsSlice
